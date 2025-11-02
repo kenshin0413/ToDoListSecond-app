@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import SwiftUI
 
 class HomeViewModel: ObservableObject {
     @Published var showAddTask = false
     @Published var addTask = ""
     @Published var todoList: [ToDoItem] = [ToDoItem(isChecked: false, task: "買い物に行く"), ToDoItem(isChecked: false, task: "ジムに行く"), ToDoItem(isChecked: false, task: "塾に行く")]
+    @Published var deleteOffset: IndexSet?
     
     init() {
         loadTask()
@@ -37,5 +39,15 @@ class HomeViewModel: ObservableObject {
                 todoList = saveTasks
             }
         }
+    }
+    
+    func remove(index: IndexSet) {
+        todoList.remove(atOffsets: index)
+        saveTasks()
+    }
+    
+    func moveTask(from source: IndexSet, to destination: Int) {
+        todoList.move(fromOffsets: source, toOffset: destination)
+        saveTasks()
     }
 }
