@@ -30,6 +30,8 @@ struct HomeView: View {
                                 HomeVM.saveTasks()
                             }
                     }
+                    .onDelete(perform: HomeVM.remove)
+                    .onMove(perform: HomeVM.moveTask)
                 }
             }
             .toolbar {
