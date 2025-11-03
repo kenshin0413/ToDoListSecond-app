@@ -12,4 +12,5 @@ struct ToDoItem: Identifiable, Codable {
     var isChecked: Bool
     var task: String
     var memo: String = ""
+    var createdAt: Date = Date()
 }
