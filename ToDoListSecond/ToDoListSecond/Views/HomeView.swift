@@ -12,6 +12,16 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
+                Picker("並び替え", selection: $HomeVM.sortOption) {
+                    ForEach(SortOption.allCases, id: \.self) { opt in
+                        Text(opt.rawValue)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: HomeVM.sortOption) {
+                    HomeVM.sortTask()
+                }
+                .padding()
                 List {
                     ForEach($HomeVM.todoList) { $item in
                         HStack {
@@ -30,7 +40,10 @@ struct HomeView: View {
                                 HomeVM.saveTasks()
                             }
                     }
-                    .onDelete(perform: HomeVM.remove)
+                    .onDelete { offsets in
+                        HomeVM.deleteOffsets = offsets
+                        HomeVM.showDeleteAlert = true
+                    }
                     .onMove(perform: HomeVM.moveTask)
                 }
             }
@@ -45,6 +58,21 @@ struct HomeView: View {
             }
             .navigationTitle("ToDoList")
             .navigationBarTitleDisplayMode(.inline)
+            .alert("このタスクを削除しますか？", isPresented: $HomeVM.showDeleteAlert) {
+                Button("削除", role: .destructive) {
+                    if let offsets = HomeVM.deleteOffsets {
+                        HomeVM.remove(index: offsets)
+                        // もう削除対象はないのでリセットする
+                        HomeVM.deleteOffsets = nil
+                    }
+                }
+                
+                Button("キャンセル", role: .cancel) {
+                    HomeVM.deleteOffsets = nil
+                }
+            } message: {
+                Text("この操作は取り消せません")
+            }
         }
         .sheet(isPresented: $HomeVM.showAddTask) {
             AddTaskView(HomeVM: HomeVM)

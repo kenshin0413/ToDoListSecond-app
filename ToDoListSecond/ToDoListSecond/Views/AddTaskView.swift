@@ -19,6 +19,7 @@ struct AddTaskView: View {
             
             Button("追加") {
                 HomeVM.todoList.append(ToDoItem(isChecked: false, task: addTask))
+                HomeVM.sortTask()
                 HomeVM.saveTasks()
                 addTask = ""
                 dismiss()

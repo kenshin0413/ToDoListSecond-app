@@ -12,8 +12,9 @@ class HomeViewModel: ObservableObject {
     @Published var showAddTask = false
     @Published var addTask = ""
     @Published var todoList: [ToDoItem] = [ToDoItem(isChecked: false, task: "買い物に行く"), ToDoItem(isChecked: false, task: "ジムに行く"), ToDoItem(isChecked: false, task: "塾に行く")]
-    @Published var deleteOffset: IndexSet?
-    
+    @Published var deleteOffsets: IndexSet?
+    @Published var showDeleteAlert = false
+    @Published var sortOption: SortOption = .new
     init() {
         loadTask()
     }
@@ -48,6 +49,20 @@ class HomeViewModel: ObservableObject {
     
     func moveTask(from source: IndexSet, to destination: Int) {
         todoList.move(fromOffsets: source, toOffset: destination)
+        saveTasks()
+    }
+    
+    func sortTask() {
+        switch sortOption {
+        case .new:
+             todoList.sort {
+                $0.createdAt > $1.createdAt
+            }
+        case .old:
+             todoList.sort {
+                $0.createdAt < $1.createdAt
+            }
+        }
         saveTasks()
     }
 }
