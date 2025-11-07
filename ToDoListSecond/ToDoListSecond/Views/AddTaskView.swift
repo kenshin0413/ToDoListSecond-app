@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddTaskView: View {
-    @ObservedObject var HomeVM: HomeViewModel
+    @ObservedObject var ListVM: ListViewModel
     @Environment(\.dismiss) var dismiss
     @State var addTask = ""
     var body: some View {
@@ -18,9 +18,9 @@ struct AddTaskView: View {
                 .padding()
             
             Button("追加") {
-                HomeVM.todoList.append(ToDoItem(isChecked: false, task: addTask))
-                HomeVM.sortTask()
-                HomeVM.saveTasks()
+                ListVM.todoList.append(ToDoItem(isChecked: false, task: addTask))
+                ListVM.sortTask()
+                ListVM.saveTasks()
                 addTask = ""
                 dismiss()
             }
@@ -34,5 +34,5 @@ struct AddTaskView: View {
 }
 
 #Preview {
-    AddTaskView(HomeVM: HomeViewModel())
+    AddTaskView(ListVM: ListViewModel())
 }
